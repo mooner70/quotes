@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Quotes</title>
+    </head>
+<body>
+    <form action="/quotes" method="POST">
+        {% csrf_token %}
+        <a href="/logout">Logout</a>
+        <h3>Welcome, {{request.session.name}}!</h3>
+    </form>
+    <form action="/add_fav" method="POST">
+        <p>Quotable Quotes</p>
+        <div style="overflow: auto; width:300px; height:200px;">
+            {% for quotes in quotes %}
+                <!-- <textarea>{{quotes.quoteBy}}: {{quotes.quoteMessage}}</textarea> -->
+                <h3>{{quotes.quoteBy}}: {{quotes.quoteMessage}}</h3>
+                <h5>Posted by: {{request.session.name}}</h5>
+                <input type="submit" value="Add to my list">
+
+            {% endfor %}
+        </div>
+    </form>
+    <form action="/add" method="POST">
+        {% csrf_token %}
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <ul>
+            <h2>Contribute a quote:</h2>
+            <li>
+                <input type="text" name="quoteBy" placeholder="Quoted By:">
+            <li>
+                <textarea name="quoteMessage" placeholder="Message"></textarea>
+            </li>
+            </li>
+            <li>
+            <input type="submit" value="Submit">
+            </li>
+        </ul>
+        </form>
+</body>
+</html>
