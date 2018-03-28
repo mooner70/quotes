@@ -7,24 +7,31 @@
         <title>Quotes</title>
     </head>
 <body>
-    <form action="/quotes" method="POST">
-        {% csrf_token %}
-        <a href="/logout">Logout</a>
-        <h3>Welcome, {{request.session.name}}!</h3>
-    </form>
-    <form action="/add_fav" method="POST">
-        <p>Quotable Quotes</p>
-        <div style="overflow: auto; width:300px; height:200px;">
-            {% for quotes in quotes %}
-                <!-- <textarea>{{quotes.quoteBy}}: {{quotes.quoteMessage}}</textarea> -->
-                <h3>{{quotes.quoteBy}}: {{quotes.quoteMessage}}</h3>
-                <h5>Posted by: {{request.session.name}}</h5>
-                <input type="submit" value="Add to my list">
+    <a href="/logout">Logout</a>
+    <h4>Welcome, {{request.session.name}}!</h4>
+    <h2>Quotable Quotes</h2>
+    <div style="overflow: auto; width:500px; height:300px; border-style:solid">
+        {% for quote in quotes %}
+        <h3>{{quote.quotedBy}}: {{quote.quotes}}</h3>
+        <h5>Posted by: <a href="/user_quotes/{{quote.id}}">{{quote.creator.name}}</a></h5>
+        <a href="add_to_favorite/{{quote.id}}">ADD TO MY LIST</a>
+        {% endfor %}
+    </div>
+    
+    
+    <h2>Your Favorites</h2>
+    <div style="overflow: auto; width:500px; height:300px; border-style:solid">
+        {% for remove in favquotes %}
+        <h3>{{remove.quotedBy}}: {{remove.quotes}}</h3>
+        <h5>Posted by: <a href="/user_quotes/{{remove.id}}">{{remove.creator.name}}</a></h5>
+        <a href="/remove_from_favorite/{{remove.id}}">REMOVE FROM MY LIST</a>
+        {% endfor %}
+        {{remove.quotes.id}}
+    </div>
 
-            {% endfor %}
-        </div>
-    </form>
-    <form action="/add" method="POST">
+
+
+    <form action="/add_fav" method="POST">
         {% csrf_token %}
         {% if messages %}
         <ul class="messages">
@@ -36,15 +43,15 @@
         <ul>
             <h2>Contribute a quote:</h2>
             <li>
-                <input type="text" name="quoteBy" placeholder="Quoted By:">
+                <input type="text" name="quotedBy" placeholder="Quoted By:">
             <li>
-                <textarea name="quoteMessage" placeholder="Message"></textarea>
+                <textarea name="quotes" placeholder="Quote"></textarea>
             </li>
             </li>
             <li>
             <input type="submit" value="Submit">
             </li>
         </ul>
-        </form>
+    </form>
 </body>
 </html>

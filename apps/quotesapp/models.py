@@ -17,8 +17,12 @@ class RegManager(models.Manager):
             errors["email"] = "Email field cannot be empty"
         elif not email_regex.match(postData["email"]):  
             errors["email"] = "Invalid email address"
-        if len(postData["password"]) < 8:
+        if len(postData["password"]) < 8:     
             errors["password"] = "Password should be more thatn 8 characters"
+        count = User.objects.filter(email=postData["email"]).count()
+        print count
+        if count > 0:
+            errors["email"] = "Email already exists"
         # elif not password_regex.match(postData["password"]):  
         #     errors["password"] = "Invalid password"
         if postData["password"] != postData["confirm"]:
@@ -37,7 +41,7 @@ class RegManager(models.Manager):
         if len(postData["password"]) < 8:
             errors["password"] = "Password must be longer than 8 characters"
 
-        check = UserRegistration.objects.filter(email=postData["email"])
+        check = User.objects.filter(email=postData["email"])
         if len(check) == 0:
             errors["password"] = "You must enter a password"
             return errors
@@ -46,29 +50,27 @@ class RegManager(models.Manager):
         return errors
     def add_validator(self, postData):
         errors = {}
-        if len(postData["quoteBy"]) < 3:
-            errors["quoteBy"] = "Quoted by field must contain more than 3 characters"
-        if len(postData["quoteMessage"]) < 10:
-            errors["quoteMessage"] = "Message field must contain more than 10 characters"
+        if len(postData["quotedBy"]) < 3:
+            errors["quotedBy"] = "Quoted by field must contain more than 3 characters"
+        if len(postData["quotes"]) < 10:
+            errors["quotes"] = "Message field must contain more than 10 characters"
         return errors
 
-class UserRegistration(models.Model):
+class User(models.Model):
     name = models.CharField(max_length=255)
     alias = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.CharField(max_length=255, )
     birthday = models.DateField()
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = RegManager()
 
-class UserQuote(models.Model):
+class Quote(models.Model):
     quotes = models.CharField(max_length=255)
-    quoteBy = models.CharField(max_length=255)
-    quoteMessage = models.CharField(max_length=255)
-    userQuote = models.ForeignKey(UserRegistration, related_name = "quotes")
-    userFav = models.ForeignKey(UserRegistration, related_name = "favQuotes")
-    favQuotes = models.ManyToManyField(UserRegistration, related_name = "favUsers")
+    quotedBy = models.CharField(max_length=255)
+    creator = models.ForeignKey(User, related_name = "quotes")
+    favusers = models.ManyToManyField(User, related_name = "favquotes")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = RegManager()

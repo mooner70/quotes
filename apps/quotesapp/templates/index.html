@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="static/styles.css">
 </head>
 <body>
-    <form action="/registration" method="POST" class="form-style-9">
+    <form action="/users" method="POST" class="form-style-9">
     {% csrf_token %}
     {% if messages %}
     <ul class="messages">
@@ -21,7 +21,7 @@
       <h2>Welcome!</h2>
       <p>Rsgister</p>
       <li>
-          <input type="text" name="name" class="field-style field-split align-left" placeholder="Name">
+          <input title="whatever" type="text" name="name" class="field-style field-split align-left" placeholder="Name">
           <input type="text" name="alias" class="field-style field-split align-right" placeholder="Alias">
       </li>
       <li>
